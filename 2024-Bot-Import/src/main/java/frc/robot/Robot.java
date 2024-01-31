@@ -5,8 +5,11 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import com.ctre.phoenix6.hardware.Pigeon2;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -18,6 +21,8 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+
+  private final Pigeon2 m_gyro = new Pigeon2(7);
 
   /**
    * This function is run when the robot is first started up and should be used for any
