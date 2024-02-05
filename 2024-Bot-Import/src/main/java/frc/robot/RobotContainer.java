@@ -18,10 +18,14 @@ import edu.wpi.first.wpilibj.PS4Controller.Button;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.SwervedriveSubsystem.DriveSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem.Elevator;
+import frc.robot.subsystems.PivotSubsystem.Pivot;
+import frc.robot.subsystems.ShooterBoxSubsystem.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import java.util.List;
 
@@ -34,6 +38,9 @@ import java.util.List;
 public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+  private final Elevator m_elevatorSubsystem = new Elevator();
+  private final Pivot m_pivotSubsystem = new Pivot();
+  private final ShooterBoxSubsystem m_shooterBoxSubsystem = new ShooterBoxSubsystem();
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
@@ -49,13 +56,7 @@ public class RobotContainer {
     m_robotDrive.setDefaultCommand(
         // The left stick controls translation of the robot.
         // Turning is controlled by the X axis of the right stick.
-        new RunCommand(
-            () -> m_robotDrive.drive(
-                -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
-                -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
-                -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
-                false, true),
-            m_robotDrive));
+        new RunCommand(() -> m_robotDrive.drive(-MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),-MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),-MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),true, true),m_robotDrive));
   }
 
   /**
@@ -67,11 +68,10 @@ public class RobotContainer {
    * passing it to a
    * {@link JoystickButton}.
    */
+   //This is basiclly saying - while joystick button triangle (Y) is pressed, the (while true) section runs, so while the button is pressed runcommand - robot drive.setX.
   private void configureButtonBindings() {
-    new JoystickButton(m_driverController, Button.kR1.value)
-        .whileTrue(new RunCommand(
-            () -> m_robotDrive.setX(),
-            m_robotDrive));
+    new JoystickButton(m_driverController, Button.kTriangle.value).whileTrue(new RunCommand(() -> m_robotDrive.setX(), m_robotDrive));
+    new JoystickButton(m_driverController, Button.kSquare.value).toggleOnTrue(new RunCommand(() -> m_shooterBoxSubsystem.kina1(3), m_shooterBoxSubsystem));
   }
 
   /**

@@ -23,7 +23,6 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
 
   private final Pigeon2 m_gyro = new Pigeon2(7);
-
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
